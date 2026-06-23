@@ -2,7 +2,8 @@
 
 **Contexte** : Test interne  
 **Date** : Juin 2025  
-**Outil évalué** : SpecKit + Continue (extension VS Code)  
+**Outil évalué** : SpecKit (open source) + Continue (extension VS Code)  
+**Mode d'utilisation** : Agent libre (sans invocation des slash commands SpecKit)  
 **Objectifs** : Évaluer le niveau d'assistance à la complétion des requirements, le niveau de détail de l'implémentation et la qualité du code produit par l'agent.
 
 ---
@@ -18,6 +19,18 @@ SpecKit s'intègre à **Continue**, une extension VS Code open source qui connec
 ### Contexte du test
 
 Le test a consisté à partir d'un projet quasi-vierge contenant uniquement un fichier `specs/requirements.md` décrivant un système d'authentification minimaliste (5 exigences, section contraintes vide). L'objectif était de mesurer jusqu'où l'agent pouvait aller de manière autonome, depuis la lecture des specs jusqu'au déploiement local d'une application fonctionnelle fullstack.
+
+### ⚠️ Nuance importante sur le mode d'utilisation
+
+Le projet SpecKit expose un ensemble de **slash commands** structurées (`/speckit.specify`, `/speckit.clarify`, `/speckit.plan`, `/speckit.tasks`, `/speckit.analyze`, `/speckit.implement`, `/speckit.converge`) qui définissent un workflow précis et guidé. Ces commandes s'activent uniquement lorsque l'utilisateur les invoque **explicitement** dans Continue.
+
+Dans ce test, **aucune slash command n'a été utilisée**. L'interaction s'est faite en langage naturel (ex : *"Lis specs/requirements.md et explique le système"*), ce qui a activé l'agent en mode **libre** — sans les guardrails, les étapes de validation et la structure imposée par les workflows SpecKit.
+
+**Ce test mesure donc deux choses distinctes :**
+- La capacité de l'agent IA en mode libre, avec les fichiers SpecKit comme simple contexte
+- Non le workflow SpecKit complet tel qu'il est conçu pour être utilisé
+
+Un test complet de SpecKit nécessiterait de démarrer avec `/speckit.specify` et de suivre la chaîne de commandes jusqu'à `/speckit.implement`, afin d'évaluer la valeur ajoutée des guardrails, de la validation de cohérence et de la décomposition structurée des tâches.
 
 ---
 
@@ -116,6 +129,8 @@ L'agent a démontré une bonne capacité à diagnostiquer des erreurs d'environn
 
 **Limites de SpecKit**
 
+- **Slash commands non invoquées** : Le workflow structuré de SpecKit (clarification, analyse de cohérence, convergence) n'a pas été activé durant ce test. Les commandes `/speckit.clarify`, `/speckit.analyze` et `/speckit.converge` auraient pu prévenir certaines erreurs de configuration (dotenv manquant, CORS oublié) en imposant des étapes de validation avant l'implémentation.
+- **Prise en main non intuitive** : L'activation des workflows SpecKit requiert une connaissance préalable des slash commands disponibles. Sans documentation d'onboarding visible, un utilisateur non averti interagit naturellement en langage libre, court-circuitant le workflow SpecKit.
 - **Pas de validation des specs** : SpecKit ne vérifie pas la cohérence entre `requirements.md`, `design.md` et `tasks.md`. Un requirement peut être omis dans les tasks sans qu'aucune alerte soit levée.
 - **Format libre** : Les fichiers Markdown sont souples mais non structurés. L'absence de schema (ex: JSON/YAML) rend difficile l'automatisation ou la génération de métriques de couverture.
 - **Pas de versionnement des specs** : Il n'y a pas de mécanisme natif pour tracer l'évolution des exigences dans le temps (diff de specs, changelog).
@@ -127,4 +142,11 @@ L'agent a démontré une bonne capacité à diagnostiquer des erreurs d'environn
 
 Le test démontre que l'association **SpecKit + Continue** constitue un environnement d'assistance au développement efficace, particulièrement pour la phase de conception et d'implémentation initiale. L'agent apporte une valeur réelle en tant que co-développeur : il structure, implémente, documente et débogue. Les frictions rencontrées étaient majoritairement des problèmes de configuration d'environnement, corrigés rapidement avec l'assistance de l'agent.
 
-Pour un usage en équipe, il serait pertinent de compléter SpecKit par des conventions plus strictes sur le format des specs et d'intégrer des scripts d'initialisation d'environnement dans le scaffold de base afin de réduire les frictions au démarrage.
+Cependant, ce test ayant été conduit **sans utiliser les slash commands SpecKit**, il ne reflète qu'une partie du potentiel de l'outil. Le workflow structuré (`/speckit.specify` → `/speckit.clarify` → `/speckit.plan` → `/speckit.tasks` → `/speckit.analyze` → `/speckit.implement` → `/speckit.converge`) apporte des garanties supplémentaires que ce test n'a pas évaluées : validation de cohérence entre specs et tâches, détection des ambiguïtés avant implémentation, et convergence post-implémentation.
+
+### Recommandations pour un prochain test
+
+1. **Démarrer par `/speckit.specify`** avec une description en langage naturel de la fonctionnalité à construire, afin d'activer le workflow complet.
+2. **Suivre la chaîne de commandes** dans l'ordre prévu pour mesurer la valeur ajoutée de chaque étape de validation.
+3. **Documenter l'onboarding** : prévoir un guide visible dans le README pour qu'un nouvel utilisateur comprenne qu'il doit utiliser les slash commands et non interagir en langage libre.
+4. **Comparer les deux modes** : un test en mode libre vs. un test avec le workflow SpecKit complet permettrait de mesurer objectivement l'apport des guardrails structurés.

@@ -52,7 +52,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 1. From the executed script, extract the path to **tasks**.
 1. Get the Git remote by running:
 
-```bash
+```powershell
 git config --get remote.origin.url
 ```
 

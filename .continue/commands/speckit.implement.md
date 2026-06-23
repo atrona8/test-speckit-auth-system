@@ -94,8 +94,8 @@ You **MUST** consider the user input before proceeding (if not empty).
    **Detection & Creation Logic**:
    - Check if the following command succeeds to determine if the repository is a git repo (create/verify .gitignore if so):
 
-     ```sh
-     git rev-parse --git-dir 2>/dev/null
+     ```powershell
+     git rev-parse --git-dir 2>$null
      ```
 
    - Check if Dockerfile* exists or Docker in plan.md → create/verify .dockerignore
@@ -110,7 +110,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    **If ignore file missing**: Create with full pattern set for detected technology
 
    **Common Patterns by Technology** (from plan.md tech stack):
-   - **Node.js/JavaScript/TypeScript**: `node_modules/`, `dist/`, `build/`, `*.log`, `.env*`
+   - **Node.js/JavaScript/TypeScript**: `node_modules/`, `dist/`, `build/`, `*.log`, `.env*`, `package-lock.json`
    - **Python**: `__pycache__/`, `*.pyc`, `.venv/`, `venv/`, `dist/`, `*.egg-info/`
    - **Java**: `target/`, `*.class`, `*.jar`, `.gradle/`, `build/`
    - **C#/.NET**: `bin/`, `obj/`, `*.user`, `*.suo`, `packages/`
