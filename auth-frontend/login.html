@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/auth.js"></script>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Connexion</h1>
+      <p class="subtitle">Entrez vos identifiants pour accéder à votre compte.</p>
+
+      <!-- REQ-004 : Affichage des erreurs -->
+      <div class="error-message" id="errorMsg"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Adresse email</label>
+          <input type="email" id="email" placeholder="vous@exemple.com" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" placeholder="••••••••" required />
+        </div>
+        <button type="submit" id="submitBtn">Se connecter</button>
+      </form>
+
+      <div class="link-row">
+        Pas encore de compte ? <a href="register.html">S'inscrire</a>
+      </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+      // REQ-006 : Redirige si déjà connecté
+      requireGuest();
+
+      const form = document.getElementById("loginForm");
+      const errorMsg = document.getElementById("errorMsg");
+      const submitBtn = document.getElementById("submitBtn");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        errorMsg.classList.remove("visible");
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Connexion...";
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        try {
+          // REQ-002 : Connexion
+          const { token } = await apiLogin(email, password);
+          // REQ-005 : Stockage du token
+          setToken(token);
+          // REQ-006 : Redirection vers dashboard
+          window.location.href = "dashboard.html";
+        } catch (err) {
+          // REQ-004 : Affichage de l'erreur
+          errorMsg.textContent = err.message;
+          errorMsg.classList.add("visible");
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Se connecter";
+        }
+      });
+    </script>
+  </body>
+</html>

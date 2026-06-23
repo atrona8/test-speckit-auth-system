@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Auth App</title>
+    <script src="js/auth.js"></script>
+    <script>
+      // REQ-006 : Redirection automatique selon l'état de connexion
+      if (isLoggedIn()) {
+        window.location.href = "dashboard.html";
+      } else {
+        window.location.href = "login.html";
+      }
+    </script>
+  </head>
+  <body></body>
+</html>

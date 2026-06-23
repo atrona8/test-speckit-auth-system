@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/auth.js"></script>
+  </head>
+  <body>
+    <div class="card dashboard-card">
+      <div class="avatar" id="avatar">?</div>
+      <h1>Bienvenue !</h1>
+      <p class="user-email" id="userEmail">Chargement...</p>
+
+      <!-- REQ-004 : Affichage des erreurs -->
+      <div class="error-message" id="errorMsg"></div>
+
+      <!-- REQ-003 : Bouton de déconnexion -->
+      <button class="btn-logout" id="logoutBtn">Se déconnecter</button>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+      // REQ-006 : Redirige vers login si non connecté
+      requireAuth();
+
+      const errorMsg = document.getElementById("errorMsg");
+      const logoutBtn = document.getElementById("logoutBtn");
+
+      // REQ-005 : Lecture du token et décodage de l'email
+      function parseJwt(token) {
+        try {
+          return JSON.parse(atob(token.split(".")[1]));
+        } catch {
+          return null;
+        }
+      }
+
+      const token = getToken();
+      const payload = parseJwt(token);
+
+      if (payload && payload.email) {
+        const initial = payload.email[0].toUpperCase();
+        document.getElementById("avatar").textContent = initial;
+        document.getElementById("userEmail").textContent = payload.email;
+      }
+
+      // REQ-003 : Déconnexion
+      logoutBtn.addEventListener("click", async () => {
+        logoutBtn.disabled = true;
+        logoutBtn.textContent = "Déconnexion...";
+        errorMsg.classList.remove("visible");
+
+        try {
+          await apiLogout(token);
+        } catch (err) {
+          // Déconnexion locale même si l'API échoue
+          console.warn("Logout API error:", err.message);
+        } finally {
+          // REQ-005 : Suppression du token
+          removeToken();
+          // REQ-006 : Redirection vers login
+          window.location.href = "login.html";
+        }
+      });
+    </script>
+  </body>
+</html>
