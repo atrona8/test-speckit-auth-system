@@ -1,8 +1,8 @@
-# Rapport d'évaluation — Test de SpecKit avec agent IA (Continue)
+# Rapport d'évaluation : Test de SpecKit avec agent IA (Continue)
 
 **Contexte** : Test interne  
 **Date** : Juin 2025  
-**Outil évalué** : SpecKit (open source) + Continue (extension VS Code)  
+**Outil évalué** : SpecKit + Continue (extension VS Code)  
 **Objectifs** : Évaluer le niveau d'assistance à la complétion des requirements, le niveau de détail de l'implémentation et la qualité du code produit par l'agent.
 
 ---
@@ -11,7 +11,7 @@
 
 ### Qu'est-ce que SpecKit ?
 
-SpecKit est un framework open source de gestion de spécifications orienté développement assisté par IA. Son principe repose sur une convention de fichiers structurés — `requirements.md`, `design.md`, `tasks.md` — placés dans un dossier `specs/` à la racine du projet. Ces fichiers servent de **contexte partagé** entre le développeur et l'agent IA : l'agent peut les lire, les compléter et s'y référer pour guider son implémentation.
+SpecKit est un framework open source de gestion de spécifications orienté développement assisté par IA. Son principe repose sur une convention de fichiers structurés ( `requirements.md`, `design.md`, `tasks.md` ) placés dans un dossier `specs/` à la racine du projet. Ces fichiers servent de **contexte partagé** entre le développeur et l'agent IA : l'agent peut les lire, les compléter et s'y référer pour guider son implémentation.
 
 SpecKit s'intègre à **Continue**, une extension VS Code open source qui connecte un modèle de langage (LLM) directement à l'environnement de développement. L'agent a ainsi accès à l'arborescence du projet, aux fichiers sources, au terminal, et peut créer ou modifier du code en temps réel.
 
